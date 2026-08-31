@@ -33,11 +33,8 @@ Class profiles are typically distributed as static documents (spreadsheets, PDFs
 
 ## Deliverables
 
-- A website with a python backend. 
+- A website with a python backend that visualizes the class profile dataset. 
 - A summary file that notes all of teammates observations with claude.
-- A cleaned, structured version of the class profile dataset.
-- A matching engine implemented in Python.
-- A working website demonstrating the matching results.
 - A short write-up/presentation summarizing our methodology and findings.
 
 
