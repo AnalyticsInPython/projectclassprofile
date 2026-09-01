@@ -1,5 +1,7 @@
 # MBAxMS Class Profile Directory — Project Proposal
 
+**Team:** Malaika K, Obiari U, Hajime T, Justin P
+
 ## Overview
 
 We propose to build a private web application that organizes the MBAxMS class profile in one accessible place. The website will help classmates learn one another's faces, names, backgrounds, and career interests. The application will use Python and Django for the backend and will be deployed at a shareable URL. Access will be limited through a combination of an approved CBS email address and a shared class access code based on the program's graduation date.
@@ -121,6 +123,8 @@ The team will not collect dates of birth, private contact information, account p
 ---
 
 # MBAxMSクラスプロフィール・ディレクトリ — プロジェクト提案書
+
+**チームメンバー:** Malaika K, Obiari U, Hajime T, Justin P
 
 ## 概要
 
