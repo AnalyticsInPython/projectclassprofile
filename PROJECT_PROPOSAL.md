@@ -10,7 +10,7 @@ The MBAxMS cohort includes students with a wide variety of professional and nati
 
 ## Target Users
 
-The primary users are students in the MBAxMS cohort. Because the application will contain personal information and profile photos, access will be limited to users whose CBS email addresses were collected and approved through the project’s Google Form and who also know the shared class access code.
+The primary users are students in the MBAxMS cohort. Because the application will contain personal information and profile photos, access will be limited to users whose CBS email addresses were collected and approved through the project’s Google Form and who also know the shared class access code (e.g., the expected graduation date).
 
 ## Proposed Solution
 
@@ -90,9 +90,6 @@ hobbies
 age
 linkedin_url
 consent_confirmed_at
-is_active
-created_at
-updated_at
 ```
 
 The CBS email address will be used for the login allowlist and will not be displayed on the public-facing profile card. Age and other optional fields will be omitted from the card when not provided. If a photograph is unavailable, the interface will display an appropriate placeholder rather than failing.
@@ -119,7 +116,6 @@ The team will not collect dates of birth, private contact information, account p
 - A deployed class profile website with a Python and Django backend
 - A Google Form for collecting profile data, photographs, and consent
 - Source code and setup instructions
-- An import process for approved Google Form responses
 - A short presentation or demonstration of the completed application
 
 ---
@@ -136,7 +132,7 @@ MBAxMSのクラスには、職業や国籍などの面で多様なバックグ�
 
 ## 対象ユーザー
 
-主なユーザーはMBAxMSコホートの学生です。個人情報と顔写真を扱うため、Googleフォームを通じて収集・承認されたCBSメールアドレスを入力し、かつクラス共通アクセスコードを知っている人だけが閲覧できます。
+主なユーザーはMBAxMSコホートの学生です。個人情報と顔写真を扱うため、Googleフォームを通じて収集・承認されたCBSメールアドレスを入力し、かつクラス共通アクセスコード（ex. 卒業予定日など）を知っている人だけが閲覧できます。
 
 ## 提案する解決策
 
@@ -216,9 +212,6 @@ hobbies
 age
 linkedin_url
 consent_confirmed_at
-is_active
-created_at
-updated_at
 ```
 
 CBSメールアドレスはログインallowlistに使用し、プロフィールカードには表示しません。年齢などの任意項目は、回答がない場合にはカード上に表示しません。写真がない場合はエラーにせず、適切なプレースホルダーを表示します。
@@ -245,5 +238,4 @@ CBSメールアドレスはログインallowlistに使用し、プロフィー�
 - PythonとDjangoをバックエンドに使用したデプロイ済みクラスプロフィールWebサイト
 - プロフィール情報、写真、同意を収集するGoogleフォーム
 - ソースコードとセットアップ手順
-- 承認済みGoogleフォーム回答の取り込み処理
 - 完成したアプリケーションの短いプレゼンテーションまたはデモ
