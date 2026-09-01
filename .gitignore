@@ -1,0 +1,14 @@
+.DS_Store
+.env
+.venv/
+.uv-cache/
+__pycache__/
+*.py[cod]
+*.sqlite3
+db.sqlite3
+media/
+data/private/
+credentials/
+.coverage
+htmlcov/
+.pytest_cache/

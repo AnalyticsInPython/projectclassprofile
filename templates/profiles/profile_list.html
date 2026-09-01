@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Classmates | MBAxMS Class Directory{% endblock %}
+
+{% block content %}
+<section class="directory-hero">
+  <div class="container">
+    <p class="eyebrow">MBAxMS · Class of 2028</p>
+    <h1>Meet your classmates.</h1>
+    <p>Faces, backgrounds, interests, and the industries we hope to shape next.</p>
+  </div>
+</section>
+
+<section class="directory-section">
+  <div class="container">
+    <div class="section-heading">
+      <h2>Class directory</h2>
+      <span>{{ profiles|length }} profile{{ profiles|length|pluralize }}</span>
+    </div>
+
+    {% if profiles %}
+      <div class="profile-grid">
+        {% for profile in profiles %}
+          <article class="profile-card">
+            <img
+              class="profile-photo"
+              src="{% url 'profiles:photo' profile.pk %}"
+              alt="Portrait of {{ profile.full_name }}"
+              loading="lazy"
+            >
+            <div class="profile-content">
+              <div class="profile-title">
+                <h3>{{ profile.full_name }}</h3>
+                {% if profile.country_of_origin %}<p>{{ profile.country_of_origin }}</p>{% endif %}
+              </div>
+
+              <dl>
+                {% if profile.previous_employment %}
+                  <div><dt>Previous</dt><dd>{{ profile.previous_employment }}</dd></div>
+                {% endif %}
+                {% if profile.undergraduate_institution %}
+                  <div><dt>Undergrad</dt><dd>{{ profile.undergraduate_institution }}</dd></div>
+                {% endif %}
+                {% if profile.desired_industry %}
+                  <div><dt>Interested in</dt><dd>{{ profile.desired_industry }}</dd></div>
+                {% endif %}
+                {% if profile.hobbies %}
+                  <div><dt>Outside class</dt><dd>{{ profile.hobbies }}</dd></div>
+                {% endif %}
+                {% if profile.age %}
+                  <div><dt>Age</dt><dd>{{ profile.age }}</dd></div>
+                {% endif %}
+              </dl>
+
+              {% if profile.linkedin_url %}
+                <a class="linkedin-link" href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer">
+                  View LinkedIn <span aria-hidden="true">↗</span>
+                </a>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <h3>No profiles have been imported yet.</h3>
+        <p>Use the sample CSV or an approved private export to add profiles.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-labelledby="title description">
+  <title id="title">Profile photograph unavailable</title>
+  <desc id="description">A neutral silhouette used when no photograph has been submitted.</desc>
+  <rect width="800" height="600" fill="#e6ebf0"/>
+  <circle cx="400" cy="230" r="105" fill="#aeb9c6"/>
+  <path d="M205 560c22-135 92-203 195-203s173 68 195 203" fill="#aeb9c6"/>
+</svg>
+
