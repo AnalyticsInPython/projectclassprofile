@@ -5,9 +5,9 @@
 {% block content %}
 <section class="login-shell">
   <div class="login-card">
-    <p class="eyebrow">MBAxMS · Class of 2028</p>
-    <h1>Know the people in the room.</h1>
-    <p class="login-intro">Enter your approved CBS email and the class access code to open the private directory.</p>
+    <p class="eyebrow" data-i18n="eyebrow">MBAxMS · Class of 2028</p>
+    <h1 data-i18n="login_title">Know the people in the room.</h1>
+    <p class="login-intro" data-i18n="login_intro">Enter your approved CBS email and the class access code to open the private directory.</p>
 
     {% if error %}
       <div class="alert alert-danger" role="alert">{{ error }}</div>
@@ -18,20 +18,20 @@
       <input type="hidden" name="next" value="{{ next }}">
 
       <div class="mb-3">
-        <label class="form-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+        <label class="form-label" for="{{ form.email.id_for_label }}" data-i18n="email_label">{{ form.email.label }}</label>
         {{ form.email }}
         {% for error in form.email.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
       </div>
 
       <div class="mb-4">
-        <label class="form-label" for="{{ form.access_code.id_for_label }}">{{ form.access_code.label }}</label>
+        <label class="form-label" for="{{ form.access_code.id_for_label }}" data-i18n="access_code_label">{{ form.access_code.label }}</label>
         {{ form.access_code }}
         {% for error in form.access_code.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
       </div>
 
-      <button class="btn btn-primary w-100" type="submit">Open directory</button>
+      <button class="btn btn-primary w-100" type="submit" data-i18n="submit">Open directory</button>
     </form>
-    <p class="privacy-note">Profiles are displayed only with the classmate’s consent.</p>
+    <p class="privacy-note" data-i18n="privacy_note">Profiles are displayed only with the classmate’s consent.</p>
   </div>
 </section>
 {% endblock %}
