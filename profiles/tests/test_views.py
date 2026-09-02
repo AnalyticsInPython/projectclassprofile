@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
@@ -14,9 +14,17 @@ class ProfileViewTests(TestCase):
             consent_confirmed_at=timezone.now(),
         )
 
-    def test_directory_redirects_without_access_session(self):
+    @override_settings(REQUIRE_CLASS_LOGIN=True)
+    def test_directory_redirects_without_access_session_when_login_is_required(self):
         response = self.client.get(reverse("profiles:list"))
         self.assertRedirects(response, "/login/?next=%2F")
+
+    @override_settings(REQUIRE_CLASS_LOGIN=False)
+    def test_directory_is_public_when_login_is_disabled(self):
+        response = self.client.get(reverse("profiles:list"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Example Student")
 
     def test_directory_hides_email_address(self):
         session = self.client.session
@@ -38,4 +46,3 @@ class ProfileViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response["Content-Type"], "image/svg+xml")
         self.assertEqual(response["Cache-Control"], "private, no-store")
-

@@ -6,7 +6,10 @@ from django.urls import reverse
 from access_control.models import AuthorizedEmail
 
 
-@override_settings(CLASS_ACCESS_CODE="example-class-code")
+@override_settings(
+    CLASS_ACCESS_CODE="example-class-code",
+    REQUIRE_CLASS_LOGIN=True,
+)
 class LoginTests(TestCase):
     def setUp(self):
         cache.clear()

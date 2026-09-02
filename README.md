@@ -27,6 +27,8 @@ uv sync --python 3.13
 
 Copy `.env.example` to `.env` and replace the placeholder values. Keep `DEBUG=true` for local use. The shared class access code belongs only in `.env`.
 
+Login protection is disabled by default for the classroom development phase. Set `REQUIRE_CLASS_LOGIN=true` in `.env` to restore the approved-email and shared-code login before exposing the server beyond a trusted local development environment.
+
 To keep the real database and uploaded photographs outside the project directory, add absolute paths to the private `.env` file:
 
 ```dotenv

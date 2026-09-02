@@ -118,6 +118,7 @@ CACHES = {
 }
 
 CLASS_ACCESS_CODE = os.environ.get("CLASS_ACCESS_CODE", "")
+REQUIRE_CLASS_LOGIN = env_bool("REQUIRE_CLASS_LOGIN", False)
 ACCESS_SESSION_KEY = "class_directory_access_granted"
 LOGIN_FAILURE_LIMIT = 5
 LOGIN_BLOCK_SECONDS = 300

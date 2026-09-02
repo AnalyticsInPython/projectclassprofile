@@ -19,6 +19,9 @@ GENERIC_LOGIN_ERROR = "Email address or access code is incorrect."
 
 @require_http_methods(["GET", "POST"])
 def login_view(request):
+    if not settings.REQUIRE_CLASS_LOGIN:
+        return redirect("profiles:list")
+
     if request.session.get(settings.ACCESS_SESSION_KEY):
         return redirect("profiles:list")
 
@@ -55,5 +58,6 @@ def login_view(request):
 @require_POST
 def logout_view(request):
     revoke_access(request)
+    if not settings.REQUIRE_CLASS_LOGIN:
+        return redirect("profiles:list")
     return redirect("access_control:login")
-
