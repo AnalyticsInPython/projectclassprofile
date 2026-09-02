@@ -15,6 +15,16 @@ def env_bool(name, default=False):
     return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
+def env_path(name, default):
+    value = os.environ.get(name)
+    if not value:
+        return default
+    path = Path(value).expanduser()
+    if not path.is_absolute():
+        raise RuntimeError(f"{name} must be an absolute path.")
+    return path
+
+
 DEBUG = env_bool("DEBUG", True)
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "unsafe-local-development-key")
 
@@ -67,7 +77,7 @@ ASGI_APPLICATION = "config.asgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": env_path("DJANGO_DATABASE_PATH", BASE_DIR / "db.sqlite3"),
     }
 }
 
@@ -81,7 +91,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = env_path("DJANGO_MEDIA_ROOT", BASE_DIR / "media")
 MEDIA_URL = "media/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

@@ -6,26 +6,44 @@ Confirm that each included response has explicit consent and that its required f
 
 ## 2. Prepare local private files
 
-Store them only under the ignored directory:
+For real classmate data, store the source files outside the project and Codex workspace:
 
 ```text
-data/private/
+private-import/
 ├── approved_profiles.csv
 └── photos/
 ```
 
-Never place real responses or photographs elsewhere in the repository.
+Configure the SQLite database and Django-managed photo storage with absolute paths in the private `.env` file:
+
+```dotenv
+DJANGO_DATABASE_PATH=/absolute/path/to/private/class-profile/db.sqlite3
+DJANGO_MEDIA_ROOT=/absolute/path/to/private/class-profile/media
+```
+
+Create the parent directories first. Never place real responses or photographs anywhere in the repository.
 
 ## 3. Match the CSV schema
 
-Use the same headers as `data/sample_profiles.csv`. Set `consent_confirmed` to `true` only after the team confirms the submitted consent. Use an ISO 8601 timestamp for `consent_confirmed_at`.
+The approved CSV may contain exactly these headers:
+
+```text
+full_name,csb_email,country_of_origin,previous_employment,desired_industry,hobbies,linkedin_url,photo_filename
+```
+
+`csb_email` matches the existing approved export. The importer also accepts the correctly spelled legacy header `cbs_email`. Because this file is explicitly named and treated as an approved export, the team must verify consent before adding a row. If an optional `consent_confirmed` column is present, any row without a true value is skipped.
+
+The legacy optional columns `undergraduate_institution`, `age`, and `consent_confirmed_at` remain supported. When the timestamp is omitted, the import time is recorded.
 
 The value in `photo_filename` must be the filename only, such as `response_001.jpg`. Directory paths are rejected.
 
 ## 4. Validate without writing
 
 ```bash
-uv run python manage.py import_profiles data/private/approved_profiles.csv --photo-dir data/private/photos --dry-run
+uv run python manage.py import_profiles \
+  "/absolute/path/to/private-import/approved_profiles.csv" \
+  --photo-dir "/absolute/path/to/private-import/photos" \
+  --dry-run
 ```
 
 The command rejects invalid LinkedIn URLs, invalid ages, unsupported image formats, missing photographs, malformed timestamps, and missing required columns.

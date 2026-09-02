@@ -18,18 +18,14 @@ from profiles.models import Profile
 TRUE_VALUES = {"1", "true", "yes", "y"}
 REQUIRED_COLUMNS = {
     "full_name",
-    "cbs_email",
     "photo_filename",
     "country_of_origin",
     "previous_employment",
-    "undergraduate_institution",
     "desired_industry",
     "hobbies",
-    "age",
     "linkedin_url",
-    "consent_confirmed",
-    "consent_confirmed_at",
 }
+EMAIL_COLUMNS = ("csb_email", "cbs_email")
 
 
 class Command(BaseCommand):
@@ -67,15 +63,18 @@ class Command(BaseCommand):
 
         with csv_path.open("r", encoding="utf-8-sig", newline="") as handle:
             reader = csv.DictReader(handle)
-            missing = REQUIRED_COLUMNS - set(reader.fieldnames or [])
+            fieldnames = set(reader.fieldnames or [])
+            missing = REQUIRED_COLUMNS - fieldnames
+            if not fieldnames.intersection(EMAIL_COLUMNS):
+                missing.add("csb_email (or cbs_email)")
             if missing:
                 raise CommandError(
                     "CSV is missing required columns: " + ", ".join(sorted(missing))
                 )
 
             for row_number, row in enumerate(reader, start=2):
-                consent = row["consent_confirmed"].strip().lower()
-                if consent not in TRUE_VALUES:
+                consent = (row.get("consent_confirmed") or "").strip().lower()
+                if "consent_confirmed" in fieldnames and consent not in TRUE_VALUES:
                     skipped += 1
                     self.stdout.write(
                         self.style.WARNING(
@@ -109,14 +108,18 @@ class Command(BaseCommand):
             raise CommandError("One or more rows failed validation.")
 
     def _profile_data(self, row):
-        email = normalize_email(row["cbs_email"])
+        email_text = next(
+            (row.get(column) for column in EMAIL_COLUMNS if row.get(column)),
+            "",
+        )
+        email = normalize_email(email_text)
         if not email:
             raise ValueError("CBS email is required.")
 
-        age_text = row["age"].strip()
+        age_text = (row.get("age") or "").strip()
         age = int(age_text) if age_text else None
 
-        timestamp_text = row["consent_confirmed_at"].strip()
+        timestamp_text = (row.get("consent_confirmed_at") or "").strip()
         timestamp = parse_datetime(timestamp_text) if timestamp_text else timezone.now()
         if timestamp and timezone.is_naive(timestamp):
             timestamp = timezone.make_aware(timestamp)
@@ -128,9 +131,9 @@ class Command(BaseCommand):
             "cbs_email": email,
             "country_of_origin": row["country_of_origin"].strip(),
             "previous_employment": row["previous_employment"].strip(),
-            "undergraduate_institution": row[
-                "undergraduate_institution"
-            ].strip(),
+            "undergraduate_institution": (
+                row.get("undergraduate_institution") or ""
+            ).strip(),
             "desired_industry": row["desired_industry"].strip(),
             "hobbies": row["hobbies"].strip(),
             "age": age,
@@ -178,4 +181,3 @@ class Command(BaseCommand):
             normalized_email=email,
             defaults={"is_active": True},
         )
-

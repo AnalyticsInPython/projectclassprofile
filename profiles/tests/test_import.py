@@ -10,6 +10,49 @@ from profiles.models import Profile
 
 
 class ImportProfilesTests(TestCase):
+    def test_import_accepts_current_approved_export_columns(self):
+        with TemporaryDirectory() as directory:
+            csv_path = Path(directory) / "approved_profiles.csv"
+            with csv_path.open("w", encoding="utf-8", newline="") as handle:
+                writer = csv.DictWriter(
+                    handle,
+                    fieldnames=[
+                        "full_name",
+                        "csb_email",
+                        "country_of_origin",
+                        "previous_employment",
+                        "desired_industry",
+                        "hobbies",
+                        "linkedin_url",
+                        "photo_filename",
+                    ],
+                )
+                writer.writeheader()
+                writer.writerow(
+                    {
+                        "full_name": "Current Export Student",
+                        "csb_email": "Current.Student@Example.edu",
+                        "country_of_origin": "Japan",
+                        "previous_employment": "Example Health",
+                        "desired_industry": "Healthcare",
+                        "hobbies": "Running",
+                        "linkedin_url": "https://www.linkedin.com/in/example-current",
+                        "photo_filename": "",
+                    }
+                )
+
+            call_command("import_profiles", csv_path)
+
+        profile = Profile.objects.get(cbs_email="current.student@example.edu")
+        self.assertEqual(profile.undergraduate_institution, "")
+        self.assertIsNone(profile.age)
+        self.assertTrue(
+            AuthorizedEmail.objects.filter(
+                normalized_email="current.student@example.edu",
+                is_active=True,
+            ).exists()
+        )
+
     def test_import_creates_profile_and_allowlist_entry(self):
         with TemporaryDirectory() as directory:
             csv_path = Path(directory) / "profiles.csv"
@@ -59,4 +102,3 @@ class ImportProfilesTests(TestCase):
                 is_active=True,
             ).exists()
         )
-
