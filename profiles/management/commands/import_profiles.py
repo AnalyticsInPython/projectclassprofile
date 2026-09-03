@@ -11,13 +11,17 @@ from django.db import transaction
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from PIL import Image, ImageOps, UnidentifiedImageError
+from pillow_heif import register_heif_opener
 
 from access_control.models import AuthorizedEmail
 from access_control.services import normalize_email
 from profiles.models import Profile
 
 
+register_heif_opener(thumbnails=False)
+
 TRUE_VALUES = {"1", "true", "yes", "y"}
+JPEG_CONVERSION_FORMATS = {"HEIF", "MPO"}
 REQUIRED_COLUMNS = {
     "full_name",
     "cbs_email",
@@ -159,8 +163,8 @@ class Command(BaseCommand):
         try:
             with Image.open(photo_path) as image:
                 image.verify()
-                if image.format not in {"JPEG", "MPO", "PNG", "WEBP"}:
-                    raise ValueError("Photo must be JPEG, MPO, PNG, or WebP.")
+                if image.format not in {"HEIF", "JPEG", "MPO", "PNG", "WEBP"}:
+                    raise ValueError("Photo must be HEIC/HEIF, JPEG, MPO, PNG, or WebP.")
         except UnidentifiedImageError as exc:
             raise ValueError("Photo is not a valid image.") from exc
 
@@ -180,7 +184,7 @@ class Command(BaseCommand):
             with Image.open(photo_path) as image:
                 photo_format = image.format
 
-            if photo_format == "MPO":
+            if photo_format in JPEG_CONVERSION_FORMATS:
                 with Image.open(photo_path) as image:
                     image.seek(0)
                     frame = ImageOps.exif_transpose(image).convert("RGB")

@@ -46,7 +46,7 @@ uv run python manage.py import_profiles \
   --dry-run
 ```
 
-The dry run performs the same email, LinkedIn URL, age, timestamp, and photo validation as the real import. The command rejects invalid fields, unsupported image formats, missing photographs, and missing required columns. JPEG, PNG, WebP, and MPO input files are accepted. MPO input is converted to a standard JPEG using its first frame when imported; metadata is not copied to the output.
+The dry run performs the same email, LinkedIn URL, age, timestamp, and photo validation as the real import. The command rejects invalid fields, unsupported image formats, missing photographs, and missing required columns. HEIC/HEIF, JPEG, PNG, WebP, and MPO input files are accepted. HEIC/HEIF input and the first frame of MPO input are converted to standard JPEG files when imported; metadata is not copied to the output.
 
 ## 5. Import
 
