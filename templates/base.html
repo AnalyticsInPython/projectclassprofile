@@ -87,6 +87,11 @@
         linkedin: 'View LinkedIn',
         empty_title: 'No profiles have been imported yet.',
         empty_text: 'Use the sample CSV or an approved private export to add profiles.',
+        search_placeholder: 'Search',
+        search_submit: 'Search',
+        search_clear: 'Clear',
+        no_results_title: 'No classmates match your search.',
+        no_results_text: 'Try a different name, country, employer, or fewer words.',
       },
       Español: {
         brand: 'MBAxMS',
@@ -689,6 +694,12 @@
       document.querySelectorAll('[data-i18n]').forEach((element) => {
         if (mapping[element.dataset.i18n]) {
           element.textContent = mapping[element.dataset.i18n];
+        }
+      });
+
+      document.querySelectorAll('[data-i18n-placeholder]').forEach((element) => {
+        if (mapping[element.dataset.i18nPlaceholder]) {
+          element.placeholder = mapping[element.dataset.i18nPlaceholder];
         }
       });
 

@@ -18,6 +18,22 @@
       <span>{{ profiles|length }} profile{{ profiles|length|pluralize }}</span>
     </div>
 
+    <form class="search-bar" action="{% url 'profiles:list' %}" method="get" role="search">
+      <input
+        type="search"
+        name="q"
+        value="{{ query }}"
+        class="search-input"
+        placeholder="Search"
+        data-i18n-placeholder="search_placeholder"
+        aria-label="Search classmates"
+      >
+      <button class="btn btn-primary search-submit" type="submit" data-i18n="search_submit">Search</button>
+      {% if query %}
+        <a class="search-clear" href="{% url 'profiles:list' %}" data-i18n="search_clear">Clear</a>
+      {% endif %}
+    </form>
+
     {% if profiles %}
       <div class="profile-grid">
         {% for profile in profiles %}
@@ -60,6 +76,11 @@
             </div>
           </article>
         {% endfor %}
+      </div>
+    {% elif query %}
+      <div class="empty-state">
+        <h3 data-i18n="no_results_title">No classmates match your search.</h3>
+        <p data-i18n="no_results_text">Try a different name, country, employer, or fewer words.</p>
       </div>
     {% else %}
       <div class="empty-state">

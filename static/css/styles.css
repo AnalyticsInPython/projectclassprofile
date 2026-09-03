@@ -36,7 +36,13 @@ body { margin: 0; color: var(--ink); background: var(--paper); font-family: Inte
 .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
 .section-heading h2 { margin: 0; font-size: 1.5rem; }
 .section-heading span { color: var(--muted); }
-.profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.4rem; }
+.search-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem; margin-bottom: 3rem; }
+.search-input, .search-submit { box-sizing: border-box; height: 2.9rem; border-radius: 10px; font-size: 0.95rem; line-height: 1; }
+.search-input { flex: 1 1 280px; padding: 0 0.95rem; border: 1px solid var(--line); background: #fff; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+.search-input:focus { border-color: var(--blue); outline: 3px solid rgba(47, 95, 167, 0.14); }
+.search-submit { padding: 0 1.4rem; }
+.search-clear { color: var(--muted); font-size: 0.85rem; text-decoration: underline; }
+.profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1.4rem; }
 .profile-card { overflow: hidden; background: var(--white); border: 1px solid rgba(20, 33, 61, 0.08); border-radius: 18px; box-shadow: 0 8px 28px rgba(16, 35, 62, 0.07); }
 .profile-photo { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #e6ebf0; }
 .profile-content { padding: 1.35rem; }

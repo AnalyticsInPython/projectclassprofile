@@ -36,6 +36,22 @@ class ProfileViewTests(TestCase):
         self.assertContains(response, "Example Student")
         self.assertNotContains(response, "student@example.edu")
 
+    def test_search_query_filters_directory(self):
+        Profile.objects.create(
+            full_name="Another Student",
+            cbs_email="another@example.edu",
+            country_of_origin="Canada",
+            consent_confirmed_at=timezone.now(),
+        )
+        session = self.client.session
+        session[settings.ACCESS_SESSION_KEY] = True
+        session.save()
+
+        response = self.client.get(reverse("profiles:list"), {"q": "Example"})
+
+        self.assertContains(response, "Example Student")
+        self.assertNotContains(response, "Another Student")
+
     def test_missing_photo_returns_private_placeholder(self):
         session = self.client.session
         session[settings.ACCESS_SESSION_KEY] = True

@@ -9,13 +9,19 @@ from django.views.decorators.http import require_GET
 from access_control.decorators import class_access_required
 
 from .models import Profile
+from .search import search_profiles
 
 
 @require_GET
 @class_access_required
 def profile_list(request):
-    profiles = Profile.objects.all()
-    return render(request, "profiles/profile_list.html", {"profiles": profiles})
+    query = request.GET.get("q", "").strip()
+    profiles = search_profiles(Profile.objects.all(), query)
+    return render(
+        request,
+        "profiles/profile_list.html",
+        {"profiles": profiles, "query": query},
+    )
 
 
 @require_GET
