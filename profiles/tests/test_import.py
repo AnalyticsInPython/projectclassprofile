@@ -20,7 +20,7 @@ class ImportProfilesTests(TestCase):
                     handle,
                     fieldnames=[
                         "full_name",
-                        "csb_email",
+                        "cbs_email",
                         "country_of_origin",
                         "previous_employment",
                         "desired_industry",
@@ -33,7 +33,7 @@ class ImportProfilesTests(TestCase):
                 writer.writerow(
                     {
                         "full_name": "Invalid Example",
-                        "csb_email": "not-an-email",
+                        "cbs_email": "not-an-email",
                         "country_of_origin": "",
                         "previous_employment": "",
                         "desired_industry": "",
@@ -70,7 +70,7 @@ class ImportProfilesTests(TestCase):
                     handle,
                     fieldnames=[
                         "full_name",
-                        "csb_email",
+                        "cbs_email",
                         "country_of_origin",
                         "previous_employment",
                         "desired_industry",
@@ -83,7 +83,7 @@ class ImportProfilesTests(TestCase):
                 writer.writerow(
                     {
                         "full_name": "MPO Example",
-                        "csb_email": "mpo@example.edu",
+                        "cbs_email": "mpo@example.edu",
                         "country_of_origin": "",
                         "previous_employment": "",
                         "desired_industry": "",
@@ -107,15 +107,16 @@ class ImportProfilesTests(TestCase):
                     self.assertEqual(stored_image.format, "JPEG")
                     self.assertEqual(getattr(stored_image, "n_frames", 1), 1)
 
-    def test_import_accepts_current_approved_export_columns(self):
+    def test_import_accepts_current_export_and_ignores_timestamp(self):
         with TemporaryDirectory() as directory:
             csv_path = Path(directory) / "approved_profiles.csv"
             with csv_path.open("w", encoding="utf-8", newline="") as handle:
                 writer = csv.DictWriter(
                     handle,
                     fieldnames=[
+                        "Timestamp",
                         "full_name",
-                        "csb_email",
+                        "cbs_email",
                         "country_of_origin",
                         "previous_employment",
                         "desired_industry",
@@ -127,8 +128,9 @@ class ImportProfilesTests(TestCase):
                 writer.writeheader()
                 writer.writerow(
                     {
+                        "Timestamp": "9/3/2026 12:34:56",
                         "full_name": "Current Export Student",
-                        "csb_email": "Current.Student@Example.edu",
+                        "cbs_email": "Current.Student@Example.edu",
                         "country_of_origin": "Japan",
                         "previous_employment": "Example Health",
                         "desired_industry": "Healthcare",

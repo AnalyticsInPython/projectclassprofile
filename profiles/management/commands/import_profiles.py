@@ -20,6 +20,7 @@ from profiles.models import Profile
 TRUE_VALUES = {"1", "true", "yes", "y"}
 REQUIRED_COLUMNS = {
     "full_name",
+    "cbs_email",
     "photo_filename",
     "country_of_origin",
     "previous_employment",
@@ -27,7 +28,6 @@ REQUIRED_COLUMNS = {
     "hobbies",
     "linkedin_url",
 }
-EMAIL_COLUMNS = ("csb_email", "cbs_email")
 
 
 class Command(BaseCommand):
@@ -67,8 +67,6 @@ class Command(BaseCommand):
             reader = csv.DictReader(handle)
             fieldnames = set(reader.fieldnames or [])
             missing = REQUIRED_COLUMNS - fieldnames
-            if not fieldnames.intersection(EMAIL_COLUMNS):
-                missing.add("csb_email (or cbs_email)")
             if missing:
                 raise CommandError(
                     "CSV is missing required columns: " + ", ".join(sorted(missing))
@@ -111,11 +109,7 @@ class Command(BaseCommand):
             raise CommandError("One or more rows failed validation.")
 
     def _profile_data(self, row):
-        email_text = next(
-            (row.get(column) for column in EMAIL_COLUMNS if row.get(column)),
-            "",
-        )
-        email = normalize_email(email_text)
+        email = normalize_email(row["cbs_email"])
         if not email:
             raise ValueError("CBS email is required.")
 

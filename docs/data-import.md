@@ -25,13 +25,13 @@ Create the parent directories first. Never place real responses or photographs a
 
 ## 3. Match the CSV schema
 
-The approved CSV may contain exactly these headers:
+The approved CSV must contain these application fields:
 
 ```text
-full_name,csb_email,country_of_origin,previous_employment,desired_industry,hobbies,linkedin_url,photo_filename
+full_name,cbs_email,country_of_origin,previous_employment,desired_industry,hobbies,linkedin_url,photo_filename
 ```
 
-`csb_email` matches the existing approved export. The importer also accepts the correctly spelled legacy header `cbs_email`. Because this file is explicitly named and treated as an approved export, the team must verify consent before adding a row. If an optional `consent_confirmed` column is present, any row without a true value is skipped.
+The importer requires the correctly spelled `cbs_email` header. A `Timestamp` column from the source Google Forms spreadsheet may remain in the CSV and is ignored. Other extra columns are also ignored. Because this file is explicitly named and treated as an approved export, the team must verify consent before adding a row. If an optional `consent_confirmed` column is present, any row without a true value is skipped.
 
 The legacy optional columns `undergraduate_institution`, `age`, and `consent_confirmed_at` remain supported. When the timestamp is omitted, the import time is recorded.
 
