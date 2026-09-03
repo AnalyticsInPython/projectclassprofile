@@ -1,14 +1,16 @@
 import csv
 from datetime import datetime
+from io import BytesIO
 from pathlib import Path
 
 from django.core.exceptions import ValidationError
 from django.core.files import File
+from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
-from PIL import Image, UnidentifiedImageError
+from PIL import Image, ImageOps, UnidentifiedImageError
 
 from access_control.models import AuthorizedEmail
 from access_control.services import normalize_email
@@ -85,6 +87,7 @@ class Command(BaseCommand):
 
                 try:
                     profile_data = self._profile_data(row)
+                    self._validate_profile_data(profile_data)
                     photo_path = self._photo_path(row, photo_dir)
                     if photo_path:
                         self._validate_photo(photo_path)
@@ -141,6 +144,10 @@ class Command(BaseCommand):
             "consent_confirmed_at": timestamp,
         }
 
+    def _validate_profile_data(self, profile_data):
+        candidate = Profile(**profile_data)
+        candidate.full_clean(validate_unique=False)
+
     def _photo_path(self, row, photo_dir):
         filename = Path(row["photo_filename"].strip()).name
         if not filename:
@@ -158,8 +165,8 @@ class Command(BaseCommand):
         try:
             with Image.open(photo_path) as image:
                 image.verify()
-                if image.format not in {"JPEG", "PNG", "WEBP"}:
-                    raise ValueError("Photo must be JPEG, PNG, or WebP.")
+                if image.format not in {"JPEG", "MPO", "PNG", "WEBP"}:
+                    raise ValueError("Photo must be JPEG, MPO, PNG, or WebP.")
         except UnidentifiedImageError as exc:
             raise ValueError("Photo is not a valid image.") from exc
 
@@ -173,8 +180,26 @@ class Command(BaseCommand):
         profile.full_clean()
 
         if photo_path:
-            with photo_path.open("rb") as handle:
-                profile.photo.save(photo_path.name, File(handle), save=False)
+            if profile.photo:
+                profile.photo.delete(save=False)
+
+            with Image.open(photo_path) as image:
+                photo_format = image.format
+
+            if photo_format == "MPO":
+                with Image.open(photo_path) as image:
+                    image.seek(0)
+                    frame = ImageOps.exif_transpose(image).convert("RGB")
+                    output = BytesIO()
+                    frame.save(output, format="JPEG", quality=90, optimize=True)
+                profile.photo.save(
+                    f"{photo_path.stem}.jpg",
+                    ContentFile(output.getvalue()),
+                    save=False,
+                )
+            else:
+                with photo_path.open("rb") as handle:
+                    profile.photo.save(photo_path.name, File(handle), save=False)
         profile.save()
 
         AuthorizedEmail.objects.update_or_create(
