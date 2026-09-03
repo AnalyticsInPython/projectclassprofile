@@ -19,21 +19,34 @@ These paths are excluded by `.gitignore`.
 
 ## Local setup
 
+Clone the repository and enter the project directory:
+
+```bash
+git clone <repository-url>
+cd <cloned-project-directory>
+```
+
 Install the project dependencies and create the local `.venv` with uv:
 
 ```bash
 uv sync --python 3.13
 ```
 
-Copy `.env.example` to `.env` and replace the placeholder values. Keep `DEBUG=true` for local use. The shared class access code belongs only in `.env`.
+Create the private local environment file, then replace its placeholder values. Never paste its contents into an issue, chat, or commit.
+
+```bash
+cp .env.example .env
+```
+
+Keep `DEBUG=true` for local use. The shared class access code belongs only in `.env`.
 
 Login protection is disabled by default for the classroom development phase. Set `REQUIRE_CLASS_LOGIN=true` in `.env` to restore the approved-email and shared-code login before exposing the server beyond a trusted local development environment.
 
 To keep the real database and uploaded photographs outside the project directory, add absolute paths to the private `.env` file:
 
 ```dotenv
-DJANGO_DATABASE_PATH=/absolute/path/to/private/class-profile/db.sqlite3
-DJANGO_MEDIA_ROOT=/absolute/path/to/private/class-profile/media
+DJANGO_DATABASE_PATH=/absolute/path/to/private-class-profile/database/db.sqlite3
+DJANGO_MEDIA_ROOT=/absolute/path/to/private-class-profile/media
 ```
 
 Create both parent directories before running migrations. Do not put these private paths or files in Git. If the variables are omitted, the application uses `db.sqlite3` and `media/` inside the project for fictional local development data.
@@ -74,14 +87,16 @@ Run validation first:
 
 ```bash
 uv run python manage.py import_profiles \
-  "/absolute/path/to/private/import/approved_profiles.csv" \
-  --photo-dir "/absolute/path/to/private/import/photos" \
+  "/absolute/path/to/private-class-profile/import/approved_profiles.csv" \
+  --photo-dir "/absolute/path/to/private-class-profile/import/photos" \
   --dry-run
 ```
 
 If every row passes, run the same command without `--dry-run`.
 
 See `docs/google-form.md` and `docs/data-import.md` for the required fields and review process.
+
+The import is an upsert keyed by `cbs_email`: existing profiles are updated and new profiles are added. Profiles absent from a later CSV are not automatically deleted.
 
 ## Tests
 
